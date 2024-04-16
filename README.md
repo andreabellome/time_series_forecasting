@@ -30,7 +30,7 @@ The work is under license [CC BY-NC-SA 4.0](https://creativecommons.org/licenses
 
 ## Usage
 
-The notebooks are self-explanatory and can be run in any order.
+
 
 
 
