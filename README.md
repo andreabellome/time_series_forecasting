@@ -30,6 +30,9 @@ The work is under license [CC BY-NC-SA 4.0](https://creativecommons.org/licenses
 
 ## Usage
 
+A notebook is provided that is [notebook_power_load_forecasting.ipynb](/notebook_power_load_forecasting.ipynb). This is self-explanatory, and the interested developer is encouraged to explore the code.
+
+
 
 
 
