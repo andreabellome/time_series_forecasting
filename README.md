@@ -26,7 +26,11 @@ pip install lightgbm
 pip install skforecast
 ```
 
+## License
+
 The work is under license [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc/4.0/), that is an Attribution Non-Commercial license. One can find the specifics in the [LICENSE](/LICENSE) file.
+
+Only invited developers can contribute to the repository.
 
 ## Usage
 
