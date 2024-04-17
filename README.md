@@ -10,6 +10,14 @@ To work with the repository, one can simply clone it in the local machine:
 git clone "https://github.com/andreabellome/time_series_forecasting"
 ```
 
+If one wants to specify a specific target directory (should be empty):
+
+```bash
+git clone "https://github.com/andreabellome/time_series_forecasting" /path/to/your/target/directory
+```
+
+where `/path/to/your/target/directory` should be replaced with the desired local taregt directory.
+
 The toolbox uses common Python libraries: [numpy](https://numpy.org/), [scipy](https://scipy.org/), [matplotlib](https://matplotlib.org/) and [plotly](https://plotly.com/python/). If not already downloaded, please use [pip](https://pip.pypa.io/en/stable/) to do so:
 
 ```bash
