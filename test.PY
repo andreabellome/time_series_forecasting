@@ -111,14 +111,4 @@ metric, two_steps_predictions = backtesting_forecaster(
     show_progress=True
 )
 
-# Obtain the two steps ahead prediction from backtesting
-two_steps_prediction = two_steps_predictions[0]
-
-# Make two steps ahead prediction directly using forecaster.predict
-direct_two_steps_prediction = forecaster.predict(steps=steps)[0]
-
-# Print or use both predictions
-print("Two steps ahead prediction from backtesting:", two_steps_prediction)
-print("Direct two steps ahead prediction using forecaster.predict:", direct_two_steps_prediction)
-
 st = 1
