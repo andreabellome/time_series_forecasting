@@ -21,17 +21,13 @@ where `/path/to/your/target/directory` should be replaced with the desired local
 The toolbox uses common Python libraries: [numpy](https://numpy.org/), [scipy](https://scipy.org/), [matplotlib](https://matplotlib.org/) and [plotly](https://plotly.com/python/). If not already downloaded, please use [pip](https://pip.pypa.io/en/stable/) to do so:
 
 ```bash
-pip install numpy
-pip install scipy
-pip install matplotlib
-pip install plotly
+pip install numpy, scipy, matplotlib, plotly
 ```
 
 Moreover, machine-learning-specific libraries are required: [lightgbm](https://pypi.org/project/lightgbm/) for the regression models and [skforecast](https://skforecast.org/0.11.0/index.html) for the Bayesian search. These can be installed using [pip](https://pip.pypa.io/en/stable/) as well:
 
 ```bash
-pip install lightgbm
-pip install skforecast
+pip install lightgbm, skforecast
 ```
 
 ## License
