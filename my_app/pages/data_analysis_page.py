@@ -115,8 +115,6 @@ def show_data_analysis_page():
     loads = ( "Hospital 1", "ASL 1", "ASL 2" )
     selected_loads = st.selectbox("Select dataset for prediction", loads)
 
-    n_days = st.slider("Days of prediction: ", 1, 365)
-
     data, okay, message = load_data_and_process(selected_loads)
 
     if okay:
