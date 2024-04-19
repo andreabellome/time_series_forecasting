@@ -42,8 +42,35 @@ Only invited developers can contribute to the repository.
 
 ## Usage
 
+Two main files can be used to run the forecast analysis:
+- A [Jupiter notebook](https://jupyter.org/) that describes step-by-step the data analysis, preparation and forecast performed.
+- A small web-app that can be run in local machine that does the same analysis of the notebook but for a more user-friendly interface.
+
+### Notebook
+
 A notebook is provided that is [notebook_power_load_forecasting.ipynb](/notebook_power_load_forecasting.ipynb). This is self-explanatory, and the interested developer is encouraged to explore the code.
 
+To run the notebook, one needs to have the Jupyter.
+
+```bash
+pip install jupyter
+```
+
+### Web-app
+
+The script to run the web-app is [app.py](/app.py). To run this script, one needs to have [streamlit](https://streamlit.io/) installed:
+
+```bash
+pip install streamlit
+```
+
+Then, one should open a terminal window inside the `time_series_forecasting` folder. To start the web-app, just write to terminal:
+
+```bash
+streamlit run app.py
+```
+
+Happy coding!
 
 
 
