@@ -15,7 +15,6 @@ load_csv_mapping = {
     "ASL 2": "asl_another.csv"
 }
 
-@st.cache_data(experimental_allow_widgets=True)
 def show_data_analysis_page():
 
     @st.cache_data
