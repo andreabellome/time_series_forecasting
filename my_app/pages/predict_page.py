@@ -31,7 +31,6 @@ def plot_predictions(predictions):
     )
     st.plotly_chart(fig)
 
-@st.cache_data(experimental_allow_widgets=True)
 def show_predict_page():
 
     st.title("Power-load Forecast Web-App :rocket:")
