@@ -1,5 +1,6 @@
 import streamlit as st
-from my_app.pages import data_analysis_page, predict_page
+from my_app.pages import data_analysis_page
+from my_app.pages import predict_page
 import streamlit as st
 
 # Display selectbox in sidebar

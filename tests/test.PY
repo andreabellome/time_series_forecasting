@@ -3,6 +3,8 @@
 import numpy as np
 import pandas as pd
 
+import pickle
+
 # Plots
 # ==============================================================================
 import matplotlib.pyplot as plt
@@ -10,7 +12,7 @@ import plotly.graph_objects as go
 import plotly.io as pio
 import plotly.offline as poff
 
-pio.renderers.default = 'notebook' 
+pio.renderers.default = 'browser' 
 pio.templates.default = "seaborn"
 poff.init_notebook_mode(connected=True)
 plt.style.use('seaborn-v0_8-darkgrid')
@@ -23,6 +25,10 @@ from skforecast.model_selection import bayesian_search_forecaster
 from skforecast.model_selection import backtesting_forecaster
 import shap
 shap.initjs()
+
+from skopt import BayesSearchCV
+from skopt.space import Real, Integer
+from sklearn.metrics import mean_absolute_error
 
 # Warnings configuration
 # ==============================================================================
@@ -70,17 +76,25 @@ print(f"Test dates       : {data_test.index.min()} --- {data_test.index.max()}  
 
 # Set the forecast horizon and the lags
 # ==============================================================================
-steps = 1
+steps = 365
 lags = 1850
 
 # Hyperparameters
 # ==============================================================================
-lgbm_hyperparameters = {
+""" lgbm_hyperparameters = {
     'n_estimators': 1200,       # Number of boosting rounds
     'learning_rate': 0.0100786818966835,  # Learning rate
     'max_depth': 5,             # Maximum tree depth
     'reg_alpha': 0.1,
     'reg_lambda': 0.1,
+} """
+
+lgbm_hyperparameters = {
+    'n_estimators': 800,       # Number of boosting rounds
+    'learning_rate': 0.22112275403152545,  # Learning rate
+    'max_depth': 6,             # Maximum tree depth
+    'reg_alpha': 0.5,
+    'reg_lambda': 0.4,
 }
 
 # Create forecaster
@@ -92,14 +106,26 @@ forecaster = ForecasterAutoreg(
 
 # Train forecaster
 # ==============================================================================
-forecaster.fit(y=data.loc[:end_train, 'Load'])
+
+data_train = data.loc[:end_train, 'Load']
+
+forecaster.fit(y=data_train)
 forecaster
 
-steps = 1
+predictionManual = forecaster.predict(steps, data_train.iloc[-lags:])
+error = ( predictionManual - data_test.loc[:, 'Load'].iloc[:steps] ).abs().mean()
+
+st = 1
+
+with open('forecaster_params.pkl', 'wb') as file:
+    pickle.dump(forecaster, file)
+
+
+st = 1
 
 # Backtest final model on test data for two steps ahead predictions
 # ==============================================================================
-metric, two_steps_predictions = backtesting_forecaster(
+metric, predictions = backtesting_forecaster(
     forecaster=forecaster,
     y=data.loc[:, 'Load'],
     steps=steps,  # Set steps to 2 for two steps ahead predictions
@@ -110,5 +136,34 @@ metric, two_steps_predictions = backtesting_forecaster(
     verbose=False,
     show_progress=True
 )
+
+st = 1
+
+# Plot predictions vs real value
+# ======================================================================================
+fig = go.Figure()
+trace1 = go.Scatter(x=data_test.index, y=data_test['Load'], name="to predict", mode="lines")
+trace2 = go.Scatter(x=predictions.index, y=predictions['pred'], name="prediction", mode="lines")
+
+fig.add_trace(trace1)
+fig.add_trace(trace2)
+
+fig.update_layout(
+    title="Real value vs predicted in test data (Wh)",
+    xaxis_title="Date time",
+    yaxis_title="Load",
+    width=800,
+    height=400,
+    margin=dict(l=20, r=20, t=35, b=20),
+    legend=dict(
+        orientation="h",
+        yanchor="top",
+        y=1.1,
+        xanchor="left",
+        x=0.001
+    )
+)
+fig.show()
+fig.write_image("predictions_vs_real.png")
 
 st = 1
