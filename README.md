@@ -66,15 +66,6 @@ Then, one should open a terminal window inside the `time_series_forecasting` fol
 streamlit run app.py
 ```
 
+The web-app uses pre-trained parameters saved in the variable [forecaster_params.pkl](/forecaster_params.pkl). One can generate new ones using desired lags and steps using the notebook.
+
 Happy coding!
-
-
-
-
-
-
-
-
-
-
-
