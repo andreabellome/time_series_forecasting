@@ -1,31 +1,53 @@
 import pandas as pd
 import plotly.graph_objects as go
+import os
 
-# Specify the path to your Excel file
-excel_file = "./datasets/Prices/Anno2017.xlsx"
+""" # path where you find the prices
+folder_path = "./datasets/Prices"
+folder_contents = os.listdir(folder_path)
 
 # Specify the sheet name you want to load
 sheet_name = "Prezzi-Prices"
 
-# Load the Excel file into a DataFrame
-df = pd.read_excel(excel_file, sheet_name=sheet_name)
+all_data = []
 
-# modify the data
-df.columns.values[0] = "Date" # rename the first column
-df.columns.values[1] = "Hour" # rename the second column
-df = df[df['Hour'] != 25]     # avoid the 25 (?)
-df['Hour'] -= 1               # shift from 0 to 23 hours (datetime does not work with 24)
+for folder in folder_contents:
 
-# merge date and hour and convert to datetime
-df['Date'] = pd.to_datetime(df['Date'].astype(str) + df['Hour'].astype(str).str.zfill(2), format='%Y%m%d%H')
-df.drop(columns=['Hour'], inplace=True)
+    inner_folder = folder_path + "/" + folder + "/"
+    files = [f for f in os.listdir(inner_folder) if os.path.isfile(os.path.join(inner_folder, f))]
+    load_file = inner_folder + files[0]
 
-# creation of the dataset
-data = df.groupby(df['Date'].dt.date)[df.columns[1:]].mean().reset_index() # take the mean for each value
+    df = pd.read_excel(load_file, sheet_name=sheet_name)
+
+    # modify the data
+    df.columns.values[0] = "Date" # rename the first column
+    df.columns.values[1] = "Hour" # rename the second column
+    df = df[df['Hour'] != 25]     # avoid the 25 (?)
+    df['Hour'] -= 1               # shift from 0 to 23 hours (datetime does not work with 24)
+
+    # merge date and hour and convert to datetime
+    df['Date'] = pd.to_datetime(df['Date'].astype(str) + df['Hour'].astype(str).str.zfill(2), format='%Y%m%d%H')
+    df.drop(columns=['Hour'], inplace=True)
+
+    # creation of the dataset
+    data = df.groupby(df['Date'].dt.date)[df.columns[1:]].mean().reset_index() # take the mean for each value
+
+    all_data.append(data)
+
+    print(load_file)
+
+combined_data = pd.concat(all_data, ignore_index=True)
+
+st = 1 """
+
+combined_data = pd.read_csv('combined_data.csv')
+data = pd.read_csv('datasets/load.csv')
+
+st = 1
 
 # plot
 fig = go.Figure()
-trace1 = go.Scatter( x=data['Date'], y=data['PUN'], name="to predict", mode="lines")
+trace1 = go.Scatter( x=combined_data['Date'], y=combined_data['PUN'], name="to predict", mode="lines")
 
 fig.add_trace(trace1)
 
