@@ -6,6 +6,16 @@ from ..functions.plotData import plotData
 import pickle
 from plotly import graph_objects as go
 
+dark = '''
+<style>
+    .stApp {
+    background-color: black;
+    }
+</style>
+'''
+
+st.markdown(dark, unsafe_allow_html=True)
+
 @st.cache_data
 def plot_predictions(predictions):
     # Plot predictions

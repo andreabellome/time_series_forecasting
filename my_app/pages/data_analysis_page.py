@@ -10,6 +10,16 @@ load_csv_mapping = {
     "ASL 2": "asl_another.csv"
 }
 
+dark = '''
+<style>
+    .stApp {
+    background-color: black;
+    }
+</style>
+'''
+
+st.markdown(dark, unsafe_allow_html=True)
+
 def show_data_analysis_page():
 
     # Web-app starts here
