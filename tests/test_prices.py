@@ -2,45 +2,51 @@ import pandas as pd
 import plotly.graph_objects as go
 import os
 
-""" # path where you find the prices
-folder_path = "./datasets/Prices"
-folder_contents = os.listdir(folder_path)
+wantToLoadAgain = False
 
-# Specify the sheet name you want to load
-sheet_name = "Prezzi-Prices"
+if wantToLoadAgain:
 
-all_data = []
+    # path where you find the prices
+    folder_path = "./datasets/Prices"
+    folder_contents = os.listdir(folder_path)
 
-for folder in folder_contents:
+    # Specify the sheet name you want to load
+    sheet_name = "Prezzi-Prices"
 
-    inner_folder = folder_path + "/" + folder + "/"
-    files = [f for f in os.listdir(inner_folder) if os.path.isfile(os.path.join(inner_folder, f))]
-    load_file = inner_folder + files[0]
+    # scrape all the folders to check the data in them
+    all_data = []
+    for folder in folder_contents:
 
-    df = pd.read_excel(load_file, sheet_name=sheet_name)
+        inner_folder = folder_path + "/" + folder + "/"
+        files = [f for f in os.listdir(inner_folder) if os.path.isfile(os.path.join(inner_folder, f))]
+        load_file = inner_folder + files[0]
 
-    # modify the data
-    df.columns.values[0] = "Date" # rename the first column
-    df.columns.values[1] = "Hour" # rename the second column
-    df = df[df['Hour'] != 25]     # avoid the 25 (?)
-    df['Hour'] -= 1               # shift from 0 to 23 hours (datetime does not work with 24)
+        # load the data for the given year
+        df = pd.read_excel(load_file, sheet_name=sheet_name)
 
-    # merge date and hour and convert to datetime
-    df['Date'] = pd.to_datetime(df['Date'].astype(str) + df['Hour'].astype(str).str.zfill(2), format='%Y%m%d%H')
-    df.drop(columns=['Hour'], inplace=True)
+        # modify the data
+        df.columns.values[0] = "Date" # rename the first column
+        df.columns.values[1] = "Hour" # rename the second column
+        df = df[df['Hour'] != 25]     # avoid the 25 (?)
+        df['Hour'] -= 1               # shift from 0 to 23 hours (datetime does not work with 24)
 
-    # creation of the dataset
-    data = df.groupby(df['Date'].dt.date)[df.columns[1:]].mean().reset_index() # take the mean for each value
+        # merge date and hour and convert to datetime
+        df['Date'] = pd.to_datetime(df['Date'].astype(str) + df['Hour'].astype(str).str.zfill(2), format='%Y%m%d%H')
+        df.drop(columns=['Hour'], inplace=True)
 
-    all_data.append(data)
+        # creation of the dataset
+        data = df.groupby(df['Date'].dt.date)[df.columns[1:]].mean().reset_index() # take the mean for each value
 
-    print(load_file)
+        # append the data
+        all_data.append(data)
 
-combined_data = pd.concat(all_data, ignore_index=True)
+        print("Loaded file: " + load_file)
 
-st = 1 """
+    combined_data = pd.concat(all_data, ignore_index=True)          # concatenate all the data
+    combined_data.to_csv('datasets/combined_data.csv', index=False) # save all the data to file
 
-combined_data = pd.read_csv('combined_data.csv')
+
+combined_data = pd.read_csv('datasets/combined_data.csv')
 data = pd.read_csv('datasets/load.csv')
 
 st = 1

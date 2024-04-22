@@ -34,11 +34,11 @@ def show_data_analysis_page():
     plotDataInstance = plotData()
     data, okay, message = plotDataInstance.load_data_and_process(selected_loads)
 
-    
+    columnName = 'Load'
     if okay:
         
         # plot the entire dataset
-        fig = plotDataInstance.plot_raw_data(data)
+        fig = plotDataInstance.plot_raw_data(data, columnName)
         st.plotly_chart(fig)
 
         # make a zoom on user-defined dates
@@ -49,11 +49,11 @@ def show_data_analysis_page():
         end_date = st.date_input("Select end date:", min_value=data.index.min(), max_value=data.index.max(), value=dataZoom.index.max())
 
         if st.button("Generate Plot"):
-            fig = plotDataInstance.plot_zoom(data, start_date, end_date)
+            fig = plotDataInstance.plot_zoom(data, columnName, start_date, end_date)
             if fig:
                 st.pyplot(fig)
         else:
-            fig = plotDataInstance.plot_zoom(data, datetime.strptime(defaultStartZoom, '%Y-%m-%d').date(), datetime.strptime(defaultEndZoom, '%Y-%m-%d').date())
+            fig = plotDataInstance.plot_zoom(data, columnName, datetime.strptime(defaultStartZoom, '%Y-%m-%d').date(), datetime.strptime(defaultEndZoom, '%Y-%m-%d').date())
             if fig:
                 st.pyplot(fig)
 
@@ -64,15 +64,15 @@ def show_data_analysis_page():
         if wkeek_month_years == "Week":
             stop = 1
             # plot the load distributions by months
-            fig1 = plotDataInstance.plot_distribution_by_week(data)
+            fig1 = plotDataInstance.plot_distribution_by_week(data, columnName)
             st.plotly_chart(fig1)
         elif wkeek_month_years == "Month":
             # plot the load distributions by months
-            fig1 = plotDataInstance.plot_distribution_by_month(data)
+            fig1 = plotDataInstance.plot_distribution_by_month(data, columnName)
             st.plotly_chart(fig1)
         else:
             # plot the load distributions by years
-            fig1 = plotDataInstance.plot_distribution_by_years(data)
+            fig1 = plotDataInstance.plot_distribution_by_years(data, columnName)
             st.plotly_chart(fig1)
 
 

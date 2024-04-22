@@ -1,54 +1,30 @@
-import streamlit as st
-import os
 import pandas as pd
 import numpy as np
 from plotly import graph_objects as go
 import matplotlib.pyplot as plt
+from datetime import datetime
 
-class plotData:
-
-    # Dictionary mapping loads to corresponding CSV files
-    load_csv_mapping = {
-        "Hospital 1": "load.csv",
-        "ASL 1": "asl_whatever.csv",
-        "ASL 2": "asl_another.csv"
-    }
+class processAndPlotData:
 
     def __init__(self):
         pass
-    
-    @st.cache_data
-    def load_data_and_process(_self, ticker):
-        """
-        Function to load and process data based on the selected ticker.
-        
-        Args:
-            ticker (str): The selected ticker from the dropdown.
-        
-        Returns:
-            data (DataFrame): The processed DataFrame.
-            okay (bool): Whether the operation was successful.
-            message (str): Message indicating the outcome of the operation.
-        """
-        
-        csv_filename = _self.load_csv_mapping[ticker]
-        try:
-            data = pd.read_csv(os.path.join("datasets", csv_filename))
-            data['Date'] = pd.to_datetime(data['Date'], format='%Y-%m-%d')
-            data = data.set_index('Date')
-            data = data.asfreq('1D')
-            data = data.sort_index()
-            if data.isnull().any(axis=1).mean() > 0.0:
-                data.asfreq(freq='1D', fill_value=np.nan)
-            message = "Everything okay."
-            return data, True, message
-        except FileNotFoundError:
-            message = "File not found, please check the database."
-            return np.NaN, False, message
-        
 
-    @st.cache_data
-    def plot_raw_data(_self, data, columnName: str):
+    @staticmethod
+    def process_data(data):
+        data['Date'] = pd.to_datetime(data['Date'], format='%Y-%m-%d')
+        data = data.set_index('Date')
+        data = data.asfreq('1D')
+        data = data.sort_index()
+        if data.isnull().any(axis=1).mean() > 0.0:
+            data.asfreq(freq='1D', fill_value=np.nan)
+        return data
+    
+    @staticmethod
+    def plot_raw_data(data, columnName: str, 
+                  title : str = 'Power load (Wh)', 
+                  xaxis_title: str = "Time", 
+                  yaxis_title: str ="Load", 
+                  legend_title: str ="Partition:"):
         """
         Function to plot the raw data.
         
@@ -58,10 +34,10 @@ class plotData:
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=data.index, y=data[columnName], mode='lines', name=columnName))
         fig.update_layout(
-            title  = 'Power load (Wh)',
-            xaxis_title="Time",
-            yaxis_title="Load",
-            legend_title="Partition:",
+            title = title,  # Set title property
+            xaxis_title = xaxis_title,  # Set xaxis_title property
+            yaxis_title = yaxis_title,  # Set yaxis_title property
+            legend_title = legend_title,  # Set legend_title property
             width=850,
             height=400,
             margin=dict(l=20, r=20, t=35, b=20),
@@ -72,48 +48,12 @@ class plotData:
                 xanchor="left",
                 x=0.001
             ),
-            xaxis_rangeslider_visible=True
         )
 
         return fig
-
-    @st.cache_data
-    def plot_zoom(_self, data, columnName: str, start_date, end_date):
-        """
-        Function to plot the zoomed-in data.
-        
-        Args:
-            data (DataFrame): The DataFrame containing the data to be plotted.
-            start_date (datetime): The start date for zooming.
-            end_date (datetime): The end date for zooming.
-        """
-        fig = plt.figure(figsize=(10, 5))
-        if start_date >= end_date:
-            st.warning("Please, select a start date that is greater than the end date to analyse.")
-            return False
-        else:
-            start_date = start_date.strftime("%Y-%m-%d")
-            end_date = end_date.strftime("%Y-%m-%d")
-            zoom = (start_date, end_date)
-            fig = plt.figure(figsize=(10, 5))
-            grid = plt.GridSpec(nrows=8, ncols=1, hspace=0.6, wspace=0)
-            main_ax = fig.add_subplot(grid[:3, :])
-            
-            data[columnName].plot(ax=main_ax, c='black', alpha=0.5, linewidth=0.5)
-            min_y = min(data[columnName])
-            max_y = max(data[columnName])
-            main_ax.fill_between(zoom, min_y, max_y, facecolor='blue', alpha=0.5, zorder=0)
-            main_ax.set_title(f'Power load (Wh): {data.index.min()}, {data.index.max()}', fontsize=10)
-            main_ax.set_xlabel('')
-            zoom_ax = fig.add_subplot(grid[5:, :])
-            data.loc[zoom[0]: zoom[1], columnName].plot(ax=zoom_ax, color='blue', linewidth=1)
-            zoom_ax.set_title(f'Power load (Wh): {zoom}', fontsize=10)
-            zoom_ax.set_xlabel('')
-
-            return fig
     
-    @st.cache_data
-    def plot_distribution_by_month(_self, data, columnName: str):
+    @staticmethod
+    def plot_distribution_by_month(data, columnName: str):
         # Load distribution by month
         # ==============================================================================
         
@@ -153,8 +93,9 @@ class plotData:
 
         return fig
     
-    @st.cache_data
-    def plot_distribution_by_week(_self, data, columnName: str):
+
+    @staticmethod
+    def plot_distribution_by_week(data, columnName: str):
         # Load distribution by month
         # ==============================================================================
 
@@ -192,10 +133,10 @@ class plotData:
         # Combine traces and layout
         fig = go.Figure(data=[box_trace, median_trace], layout=layout)
 
-        return fig
+        return fig 
     
-    @st.cache_data
-    def plot_distribution_by_years(_self, data, columnName: str):
+    @staticmethod
+    def plot_distribution_by_years(data, columnName: str):
         # Load distribution by month
         # ==============================================================================
         
@@ -234,5 +175,3 @@ class plotData:
         fig = go.Figure(data=[box_trace, median_trace], layout=layout)
 
         return fig
-        
-
