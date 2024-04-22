@@ -2,8 +2,10 @@
 # ==============================================================================
 import numpy as np
 import pandas as pd
-
 import pickle
+from astral.sun import sun
+from astral import LocationInfo
+from skforecast.datasets import fetch_dataset
 
 # Plots
 # ==============================================================================
@@ -12,7 +14,7 @@ import plotly.graph_objects as go
 import plotly.io as pio
 import plotly.offline as poff
 
-pio.renderers.default = 'browser' 
+pio.renderers.default = 'notebook' 
 pio.templates.default = "seaborn"
 poff.init_notebook_mode(connected=True)
 plt.style.use('seaborn-v0_8-darkgrid')
@@ -73,6 +75,37 @@ data_test  = data.loc[start_test:, :].copy()
 
 print(f"Train dates      : {data_train.index.min()} --- {data_train.index.max()}  (n={len(data_train)})")
 print(f"Test dates       : {data_test.index.min()} --- {data_test.index.max()}  (n={len(data_test)})")
+
+calendar_features = pd.DataFrame(index=data.index)
+calendar_features['month'] = calendar_features.index.month
+calendar_features['week_of_year'] = calendar_features.index.isocalendar().week
+calendar_features['week_day'] = calendar_features.index.day_of_week + 1
+calendar_features['hour_day'] = calendar_features.index.hour + 1
+
+# Sunlight features
+# ==============================================================================
+location = LocationInfo(
+    "Rome",
+    "Italy",
+    latitude=41.902782,
+    longitude=12.496366,
+    timezone='Europe/Rome'
+)
+sunrise_hour = [
+    sun(location.observer, date=date, tzinfo=location.timezone)['sunrise'].hour
+    for date in data.index
+]
+sunset_hour = [
+    sun(location.observer, date=date, tzinfo=location.timezone)['sunset'].hour
+    for date in data.index
+]
+sun_light_features = pd.DataFrame({
+                         'sunrise_hour': sunrise_hour,
+                         'sunset_hour': sunset_hour}, 
+                         index = data.index
+                     )
+
+st = 1
 
 # Set the forecast horizon and the lags
 # ==============================================================================
