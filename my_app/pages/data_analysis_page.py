@@ -53,7 +53,7 @@ def show_data_analysis_page():
             if fig:
                 st.pyplot(fig)
         else:
-            fig = plotDataInstance.plot_zoom(data, columnName, datetime.strptime(defaultStartZoom, '%Y-%m-%d').date(), datetime.strptime(defaultEndZoom, '%Y-%m-%d').date())
+            fig = plotDataInstance.plot_zoom(data, columnName, start_date, end_date)
             if fig:
                 st.pyplot(fig)
 

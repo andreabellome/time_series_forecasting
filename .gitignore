@@ -1,3 +1,6 @@
-__pycache__/
+__pycache__/*
 .vscode/
 prices/
+
+my_app/functions/__pycache__/*
+my_app/pages/__pycache__/*
