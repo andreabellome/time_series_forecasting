@@ -10,11 +10,18 @@ sheet_name = "Prezzi-Prices"
 # Load the Excel file into a DataFrame
 df = pd.read_excel(excel_file, sheet_name=sheet_name)
 
-df.columns.values[0] = "Date"
-df['Date'] = pd.to_datetime(df['Date'], format='%Y%m%d')
+# modify the data
+df.columns.values[0] = "Date" # rename the first column
+df.columns.values[1] = "Hour" # rename the second column
+df = df[df['Hour'] != 25]     # avoid the 25 (?)
+df['Hour'] -= 1               # shift from 0 to 23 hours (datetime does not work with 24)
 
+# merge date and hour and convert to datetime
+df['Date'] = pd.to_datetime(df['Date'].astype(str) + df['Hour'].astype(str).str.zfill(2), format='%Y%m%d%H')
+
+# plot
 fig = go.Figure()
-trace1 = go.Scatter( y=df['PUN'], name="to predict", mode="lines")
+trace1 = go.Scatter( x=df['Date'], y=df['PUN'], name="to predict", mode="lines")
 
 fig.add_trace(trace1)
 
