@@ -18,10 +18,14 @@ df['Hour'] -= 1               # shift from 0 to 23 hours (datetime does not work
 
 # merge date and hour and convert to datetime
 df['Date'] = pd.to_datetime(df['Date'].astype(str) + df['Hour'].astype(str).str.zfill(2), format='%Y%m%d%H')
+df.drop(columns=['Hour'], inplace=True)
+
+# creation of the dataset
+data = df.groupby(df['Date'].dt.date)[df.columns[1:]].mean().reset_index() # take the mean for each value
 
 # plot
 fig = go.Figure()
-trace1 = go.Scatter( x=df['Date'], y=df['PUN'], name="to predict", mode="lines")
+trace1 = go.Scatter( x=data['Date'], y=data['PUN'], name="to predict", mode="lines")
 
 fig.add_trace(trace1)
 
