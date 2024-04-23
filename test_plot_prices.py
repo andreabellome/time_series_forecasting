@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from my_app.functions.processAndPlotData import processAndPlotData
 
 
-pio.renderers.default = 'browser' 
+pio.renderers.default = "browser"
 pio.templates.default = "seaborn"
 poff.init_notebook_mode(connected=True)
 plt.style.use('seaborn-v0_8-darkgrid')
@@ -39,9 +39,11 @@ data_temperature = data_temperature[~data_temperature.index.duplicated()]
 data_temperature = data_temperature.asfreq('1D')
 data_temperature = data_temperature.sort_index() """
 
+data_temperature['AvgTemperature'] = data_temperature['AvgTemperature'].map(lambda x: (x - 32) * (5/9))
+
 data_temperature = data_temperature[data_temperature["City"] == "Rome"]
 data_temperature = data_temperature[data_temperature["Year"] >= 2006]
-data_temperature = data_temperature[data_temperature["Year"] <= 2019]
+# data_temperature = data_temperature[data_temperature["Year"] <= 2019]
 
 dataProcessed = instancePlotData.process_data(data)
 combined_dataProcessed = instancePlotData.process_data(combined_data)
