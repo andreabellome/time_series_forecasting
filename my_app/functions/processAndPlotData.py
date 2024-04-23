@@ -13,6 +13,7 @@ class processAndPlotData:
     def process_data(data):
         data['Date'] = pd.to_datetime(data['Date'], format='%Y-%m-%d')
         data = data.set_index('Date')
+        data = data[~data.index.duplicated()]
         data = data.asfreq('1D')
         data = data.sort_index()
         if data.isnull().any(axis=1).mean() > 0.0:

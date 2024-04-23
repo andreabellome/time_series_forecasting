@@ -46,8 +46,8 @@ if wantToLoadAgain:
     combined_data.to_csv('datasets/combined_data.csv', index=False) # save all the data to file
 
 
-combined_data = pd.read_csv('datasets/combined_data.csv')
-data = pd.read_csv('datasets/load.csv')
+combined_data = pd.read_csv('datasets/combined_data.csv') # these are the data of the PUN 
+data = pd.read_csv('datasets/load.csv')                   # these are the data of the power load
 
 st = 1
 
@@ -73,7 +73,5 @@ fig.update_layout(
     )
 )
 fig.show()
-
-
 
 st = 1

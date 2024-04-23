@@ -105,6 +105,16 @@ sun_light_features = pd.DataFrame({
                          index = data.index
                      )
 
+sun_light_features['daylight_hours'] = (
+    sun_light_features['sunset_hour'] - sun_light_features['sunrise_hour']
+)
+sun_light_features['is_daylight'] = np.where(
+                                        (data.index.hour >= sun_light_features['sunrise_hour']) & \
+                                        (data.index.hour < sun_light_features['sunset_hour']),
+                                        1,
+                                        0
+                                    )
+
 st = 1
 
 # Set the forecast horizon and the lags
