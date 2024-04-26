@@ -24,10 +24,10 @@ The toolbox uses common Python libraries: [numpy](https://numpy.org/), [scipy](h
 pip install numpy, scipy, matplotlib, plotly
 ```
 
-Moreover, machine-learning-specific libraries are required: [lightgbm](https://pypi.org/project/lightgbm/) for the regression models and [skforecast](https://skforecast.org/0.11.0/index.html) for the Bayesian search. These can be installed using [pip](https://pip.pypa.io/en/stable/) as well:
+Moreover, machine-learning-specific libraries are required: [lightgbm](https://pypi.org/project/lightgbm/) for the regression models, [skforecast](https://skforecast.org/0.11.0/index.html) for the Bayesian search and [shap](https://shap.readthedocs.io/en/latest/) for interpreting the results. These can be installed using [pip](https://pip.pypa.io/en/stable/) as well:
 
 ```bash
-pip install lightgbm, skforecast
+pip install lightgbm, skforecast, shap
 ```
 
 ## License
