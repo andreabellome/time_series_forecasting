@@ -10,9 +10,9 @@ class processAndPlotData:
         pass
 
     @staticmethod
-    def process_data(data):
-        data['Date'] = pd.to_datetime(data['Date'], format='%Y-%m-%d')
-        data = data.set_index('Date')
+    def process_data(data, columnName: str = 'Date'):
+        data[columnName] = pd.to_datetime(data[columnName], format='%Y-%m-%d')
+        data = data.set_index(columnName)
         data = data[~data.index.duplicated()]
         data = data.asfreq('1D')
         data = data.sort_index()
@@ -20,6 +20,13 @@ class processAndPlotData:
             data.asfreq(freq='1D', fill_value=np.nan)
         return data
     
+    @staticmethod
+    def df_convert_dtypes(df, convert_from, convert_to):
+        cols = df.select_dtypes(include=[convert_from]).columns
+        for col in cols:
+            df[col] = df[col].values.astype(convert_to)
+        return df
+
     @staticmethod
     def plot_raw_data(data, columnName: str, 
                   title : str = 'Power load (Wh)', 
@@ -70,7 +77,7 @@ class processAndPlotData:
 
             return fig
 
-            
+    
     
     @staticmethod
     def plot_distribution_by_month(data, columnName: str):
