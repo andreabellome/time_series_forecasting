@@ -25,33 +25,52 @@ class processAndPlotData:
                   title : str = 'Power load (Wh)', 
                   xaxis_title: str = "Time", 
                   yaxis_title: str ="Load", 
-                  legend_title: str ="Partition:"):
+                  legend_title: str =None,
+                  usingPlt: bool = False):
         """
         Function to plot the raw data.
         
         Args:
             data (DataFrame): The DataFrame containing the data to be plotted.
         """
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=data.index, y=data[columnName], mode='lines', name=columnName))
-        fig.update_layout(
-            title = title,  # Set title property
-            xaxis_title = xaxis_title,  # Set xaxis_title property
-            yaxis_title = yaxis_title,  # Set yaxis_title property
-            legend_title = legend_title,  # Set legend_title property
-            width=850,
-            height=400,
-            margin=dict(l=20, r=20, t=35, b=20),
-            legend=dict(
-                orientation="h",
-                yanchor="top",
-                y=1,
-                xanchor="left",
-                x=0.001
-            ),
-        )
 
-        return fig
+        if usingPlt: 
+
+            fig, ax = plt.subplots(figsize=(10, 6))
+            ax.set_xlabel(xaxis_title, fontsize=16)
+
+            ax.plot(data[columnName], label=legend_title)
+            ax.set_ylabel(yaxis_title, fontsize=16)
+            ax.legend(fontsize=16)
+            ax.set_title(title, fontsize=24)
+            ax.grid(True)
+
+            return fig
+        
+        else:
+
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(x=data.index, y=data[columnName], mode='lines', name=columnName))
+            fig.update_layout(
+                title = title,  # Set title property
+                xaxis_title = xaxis_title,  # Set xaxis_title property
+                yaxis_title = yaxis_title,  # Set yaxis_title property
+                legend_title = legend_title,  # Set legend_title property
+                width=850,
+                height=400,
+                margin=dict(l=20, r=20, t=35, b=20),
+                legend=dict(
+                    orientation="h",
+                    yanchor="top",
+                    y=1,
+                    xanchor="left",
+                    x=0.001
+                ),
+            )
+
+            return fig
+
+            
     
     @staticmethod
     def plot_distribution_by_month(data, columnName: str):
