@@ -102,7 +102,7 @@ metric, predictions = backtesting_forecaster(
 # ==============================================================================
 print(f'Backtest error (MAE): {metric}')
 
-# Plot predictions vs real value
+""" # Plot predictions vs real value
 # ======================================================================================
 fig = go.Figure()
 trace1 = go.Scatter(x=data_test.index, y=data_test[columnName], name="test", mode="lines")
@@ -125,7 +125,7 @@ fig.update_layout(
     )
 )
 fig.show()
-fig.write_html('fig1.html')
+fig.write_html('fig1.html') """
 
 """ # Hyperparameters search
 # ==============================================================================
@@ -188,7 +188,7 @@ metric, predictions = backtesting_forecaster(
 
 print(f"Backtest error (MAE): {metric:.2f}")
 
-# Plot predictions vs real value
+""" # Plot predictions vs real value
 # ======================================================================================
 fig = go.Figure()
 trace1 = go.Scatter(x=data_test.index, y=data_test[columnName], name="test", mode="lines")
@@ -211,7 +211,7 @@ fig.update_layout(
     )
 )
 fig.show()
-fig.write_html('fig_after_hyper_param.html')
+fig.write_html('fig_after_hyper_param.html') """
 
 params = {
     'n_estimators': 1300,
