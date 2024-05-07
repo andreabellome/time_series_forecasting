@@ -4,3 +4,5 @@ prices/
 
 my_app/functions/__pycache__/*
 my_app/pages/__pycache__/*
+
+datasets/doi_10_7941_D1N33Q__v20220202/*
