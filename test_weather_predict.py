@@ -259,4 +259,16 @@ selected_features = highly_correlated.loc[:, index_values]
 print(selected_features[selected_features < 1.0].stack().to_string())
 
 
+""" # Assuming 'feature' is the column you want to normalize
+feature_to_normalize = data['Load'].values.reshape(-1, 1)  # Reshape to 2D array for MinMaxScaler
+
+# Initialize MinMaxScaler
+scaler = MinMaxScaler()
+
+# Fit and transform the feature data
+normalized_feature = scaler.fit_transform(feature_to_normalize)
+
+# Replace the original feature column with the normalized values
+data['normalized_feature'] = normalized_feature """
+
 st = 1
