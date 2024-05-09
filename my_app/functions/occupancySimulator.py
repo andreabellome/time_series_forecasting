@@ -7,12 +7,13 @@ class OccupancySimulator:
 
         self.employees = employees
         self.base_percentages = base_percentages or {
-            'Monday': 30,
-            'Tuesday': 20,
-            'Wednesday': 10,
-            'Thursday': 10,
-            'Saturday': 80,
-            'Sunday': 90,
+            'Monday': 45,
+            'Tuesday': 40,
+            'Wednesday': 35,
+            'Thursday': 35,
+            'Friday': 35,
+            'Saturday': 60,
+            'Sunday': 70,
             'Christmas': 55,
             'August': 60
         }
@@ -29,23 +30,42 @@ class OccupancySimulator:
 
         day_of_week = date.day_name()
 
-        if (date.month == 12 and date.day >= 22) or (date.month == 1 and date.day <= 6):
-            noise = np.random.normal( loc=0, scale=self.noise_scales['Christmas'] )
-            base_percentage = self.base_percentages['Christmas']
-        elif (date.month == 8 and date.day >= 10) or (date.month == 8 and date.day <= 24):
-            noise = np.random.normal( loc=0, scale=self.noise_scales['August'] )
-            base_percentage = self.base_percentages['August']
+        if day_of_week in ['Saturday', 'Sunday']:
+            scale = self.noise_scales['Weekends']
         else:
-            noise = np.random.normal(loc=0, scale=self.noise_scale[day_of_week])
-            base_percentage = self.base_percentages[day_of_week]
-        
+            scale = self.noise_scales['Weekdays']
+
+        noise = np.random.normal(loc=0, scale=scale)
+        base_percentage = self.base_percentages[day_of_week]
+
         if self.sign >= 0:
             percentage_with_noise = max(min(self.sign*base_percentage + noise, 100), 0)
         else:
             percentage_with_noise = min(max(self.sign*base_percentage + noise, -100), 0)
-        
+
         occupants = self.employees  + round(percentage_with_noise / 100 * self.employees)
 
+        if (date.month == 12 and date.day >= 22) or (date.month == 1 and date.day <= 6):
+
+            noise = np.random.normal( loc=0, scale=self.noise_scales['Christmas'] )
+            base_percentage = self.base_percentages['Christmas']
+            if self.sign >= 0:
+                percentage_with_noise = max(min(self.sign*base_percentage + noise, 100), 0)
+            else:
+                percentage_with_noise = min(max(self.sign*base_percentage + noise, -100), 0)
+
+            occupants = self.employees  + round(percentage_with_noise / 100 * self.employees)
+
+        elif (date.month == 8 and date.day >= 10) or (date.month == 8 and date.day <= 24):
+            noise = np.random.normal( loc=0, scale=self.noise_scales['August'] )
+            base_percentage = self.base_percentages['August']
+            if self.sign >= 0:
+                percentage_with_noise = max(min(self.sign*base_percentage + noise, 100), 0)
+            else:
+                percentage_with_noise = min(max(self.sign*base_percentage + noise, -100), 0)
+
+            occupants = self.employees  + round(percentage_with_noise / 100 * self.employees)
+        
         return occupants
     
 
@@ -55,7 +75,7 @@ class OccupancySimulator:
 
             date = pd.to_datetime(index)
 
-            occupants = self.simulate_occupancy(self, date)
+            occupants = self.simulate_occupancy(date)
 
             data.loc[index, 'occupants'] = occupants
         
