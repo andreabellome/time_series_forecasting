@@ -17,14 +17,14 @@ dark = '''
 st.markdown(dark, unsafe_allow_html=True)
 
 @st.cache_data
-def plot_predictions(predictions):
+def plot_predictions(predictions, title: str = "Real value vs predicted in test data (Wh)"):
     # Plot predictions
     # ======================================================================================
     fig = go.Figure()
     trace2 = go.Scatter(x=predictions.index, y=predictions, name="prediction", mode="lines")
     fig.add_trace(trace2)
     fig.update_layout(
-        title="Real value vs predicted in test data (Wh)",
+        title=title,
         xaxis_title="Date time",
         yaxis_title="Load",
         width=800,
@@ -72,7 +72,7 @@ def show_predict_page():
 
             # Plot the predictions
             # ======================================================================================
-            plot_predictions(predictions)
+            plot_predictions(predictions, 'Predictions (Wh)')
 
         else:
 
@@ -80,7 +80,7 @@ def show_predict_page():
             lags = forecaster.lags[-1]
             predictions = forecaster.predict(nprevdays, data.loc[:, 'Load'].iloc[-lags:])
 
-            plot_predictions(predictions)
+            plot_predictions(predictions, 'Predictions (Wh)')
             
             
 

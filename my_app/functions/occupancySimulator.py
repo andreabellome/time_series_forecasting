@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+from datetime import datetime, timedelta
+
 
 class OccupancySimulator:
 
@@ -68,6 +70,34 @@ class OccupancySimulator:
         
         return occupants
     
+
+    def generate_datetime_range(self, start_date, end_date, step):
+        
+        current_date = start_date
+        datetime_list = []
+        while current_date <= end_date:
+            datetime_list.append(current_date)
+            current_date += timedelta(days=step)
+        return datetime_list
+
+    def simulate_occupancy_future( self, start_date, end_date, step, columnName:str = 'occupants' ):
+        
+        datetime_list = self.generate_datetime_range( start_date, end_date, step )
+
+        occupants_list = []
+        for date in datetime_list:
+
+            occupants = self.simulate_occupancy( date )
+            occupants_list.append(occupants)
+
+        data = pd.DataFrame({'Date': datetime_list, columnName: occupants_list})
+
+        data['Date'] = pd.to_datetime(data['Date'], format='%Y-%m-%d')
+        data = data.set_index('Date')
+        data = data.asfreq('1D')
+        data = data.sort_index()
+
+        return data
 
     def simulate_occupancy_for_data(self, data):
 
