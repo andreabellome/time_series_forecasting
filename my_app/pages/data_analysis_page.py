@@ -27,7 +27,7 @@ def show_data_analysis_page():
     st.subheader("Data analysis section")
 
     # select the loads
-    loads = ("Hospital 1", "ASL 1", "ASL 2")
+    loads = ("Building 1", "Building 2", "Building 3")
     selected_loads = st.selectbox("Select dataset for prediction", loads)
         
     # initialize the data load and plot

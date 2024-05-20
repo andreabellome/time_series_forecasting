@@ -9,9 +9,9 @@ class plotData:
 
     # Dictionary mapping loads to corresponding CSV files
     load_csv_mapping = {
-        "Hospital 1": "load.csv",
-        "ASL 1": "asl_whatever.csv",
-        "ASL 2": "asl_another.csv"
+        "Building 1": "load.csv",
+        "Building 2": "asl_whatever.csv",
+        "Building 3": "asl_another.csv"
     }
 
     def __init__(self):
