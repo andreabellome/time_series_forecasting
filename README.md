@@ -30,6 +30,9 @@ Moreover, machine-learning-specific libraries are required: [lightgbm](https://p
 pip install lightgbm, skforecast, shap
 ```
 
+Any version of [Jupyter](https://jupyter.org/) is also required.
+
+
 ## License
 
 The work is under license [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc/4.0/), that is an Attribution Non-Commercial license. One can find the specifics in the [LICENSE](/LICENSE) file.
