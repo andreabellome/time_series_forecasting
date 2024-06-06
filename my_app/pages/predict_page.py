@@ -16,7 +16,6 @@ dark = '''
 
 st.markdown(dark, unsafe_allow_html=True)
 
-@st.cache_data
 def plot_predictions(predictions, title: str = "Real value vs predicted in test data (Wh)"):
     # Plot predictions
     # ======================================================================================
@@ -60,8 +59,9 @@ def show_predict_page():
     if okay:
 
         # Load the forecaster object from the file
-        with open('forecaster_params.pkl', 'rb') as file:
+        with open('forecaster2.pkl', 'rb') as file:
             forecaster = pickle.load(file)
+
 
         if st.button("Generate forecast"):
 
